@@ -1,27 +1,16 @@
 #include QMK_KEYBOARD_H
 #include "keymap_swedish.h"
 
-// Tap Dance declarations
-enum {
-    TD_DOT_QMARK,
-	TD_QUOTES,
+// Tap Dance declarations	// One tap 	|  Two taps
+enum {						// ---------+-----------
+ // TD_DOT_QMARK,			// 	  .		|	  ?
+	TD_QUOTES,				//	  '		|	  "
+	TD_SPACE_DOT,			//	 SPACE	|	  .
+	TD_LBRC_LCBR,			//	  [     |     {
+	TD_RBRC_RCBR,			//	  ]     |     }
+	TD_LPRN_LT,				//	  (		|	  <
+	TD_RPRN_GT,				//	  )		|	  >	
 };
-
-void dance_dot_qmark_finished(qk_tap_dance_state_t *state, void *user_data) {
-    if (state->count == 1) {
-        register_code(KC_DOT);
-    } else {
-        register_code16(S(KC_MINS));
-    }
-}
-
-void dance_dot_qmark_reset(qk_tap_dance_state_t *state, void *user_data) {
-    if (state->count == 1) {
-        unregister_code(KC_DOT);
-    } else {
-        unregister_code16(S(KC_MINS));
-    }
-}
 
 void dance_quotes_finished(qk_tap_dance_state_t *state, void *user_data) {
     if (state->count == 1) {
@@ -39,19 +28,102 @@ void dance_quotes_reset(qk_tap_dance_state_t *state, void *user_data) {
     }
 }
 
+void dance_space_dot_finished(qk_tap_dance_state_t *state, void *user_data) {
+    if (state->count == 1) {
+        register_code(KC_SPC);
+    } else {
+        register_code(KC_DOT);
+    }
+}
+
+void dance_space_dot_reset(qk_tap_dance_state_t *state, void *user_data) {
+    if (state->count == 1) {
+        unregister_code(KC_SPC);
+    } else {
+        unregister_code(KC_DOT);
+    }
+}
+
+void dance_lbrc_lcbr_finished(qk_tap_dance_state_t *state, void *user_data) {
+    if (state->count == 1) {
+        register_code16(ALGR(KC_8));
+    } else {
+        register_code16(ALGR(KC_7));
+    }
+}
+
+void dance_lbrc_lcbr_reset(qk_tap_dance_state_t *state, void *user_data) {
+    if (state->count == 1) {
+        unregister_code16(ALGR(KC_8));
+    } else {
+        unregister_code16(ALGR(KC_7));
+    }
+}
+
+void dance_rbrc_rcbr_finished(qk_tap_dance_state_t *state, void *user_data) {
+    if (state->count == 1) {
+        register_code16(ALGR(KC_9));
+    } else {
+        register_code16(ALGR(KC_0));
+    }
+}
+
+void dance_rbrc_rcbr_reset(qk_tap_dance_state_t *state, void *user_data) {
+    if (state->count == 1) {
+        unregister_code16(ALGR(KC_9));
+    } else {
+        unregister_code16(ALGR(KC_0));
+    }
+}
+
+void dance_lprn_lt_finished(qk_tap_dance_state_t *state, void *user_data) {
+    if (state->count == 1) {
+        register_code16(S(KC_8));
+    } else {
+        register_code(KC_NUBS);
+    }
+}
+
+void dance_lprn_lt_reset(qk_tap_dance_state_t *state, void *user_data) {
+    if (state->count == 1) {
+        unregister_code16(S(KC_8));
+    } else {
+        unregister_code(KC_NUBS);
+    }
+}
+
+void dance_rprn_gt_finished(qk_tap_dance_state_t *state, void *user_data) {
+    if (state->count == 1) {
+        register_code16(S(KC_9));
+    } else {
+        register_code16(S(KC_NUBS));
+    }
+}
+
+void dance_rprn_gt_reset(qk_tap_dance_state_t *state, void *user_data) {
+    if (state->count == 1) {
+        unregister_code16(S(KC_9));
+    } else {
+        unregister_code16(S(KC_NUBS));
+    }
+}
 
 qk_tap_dance_action_t tap_dance_actions[] = {
-    [TD_DOT_QMARK] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, dance_dot_qmark_finished, dance_dot_qmark_reset),
 	[TD_QUOTES] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, dance_quotes_finished, dance_quotes_reset),
+	[TD_SPACE_DOT] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, dance_space_dot_finished, dance_space_dot_reset),
+	[TD_LBRC_LCBR] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, dance_lbrc_lcbr_finished, dance_lbrc_lcbr_reset),
+	[TD_RBRC_RCBR] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, dance_rbrc_rcbr_finished, dance_rbrc_rcbr_reset),
+	[TD_LPRN_LT] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, dance_lprn_lt_finished, dance_lprn_lt_reset),
+	[TD_RPRN_GT] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, dance_rprn_gt_finished, dance_rprn_gt_reset),
 };
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 	[0] = LAYOUT_3key_2us(
 				KC_ESC, 			KC_1, 			KC_2, 			KC_3, 			KC_4, 		KC_5, 		LSFT(KC_7), 															RALT(KC_MINS), 	KC_6, 		KC_7, 			KC_8, 		KC_9, 		KC_0, 		SE_PLUS, 
-				KC_TAB, 			KC_Q, 			KC_W, 			KC_E, 			KC_R, 		KC_T, 		KC_NUBS, 																LSFT(KC_NUBS), 	KC_Y, 		KC_U, 			KC_I, 		KC_O, 		KC_P, 		KC_LBRC, 
-				KC_CAPS, 			KC_A, 			KC_S, 			KC_D, 			KC_F, 		KC_G, 		LSFT(KC_8), 															LSFT(KC_9), 	KC_H, 		KC_J, 			KC_K, 		KC_L, 		KC_SCLN, 	KC_QUOT, 
-				TD(TD_QUOTES), 		KC_Z, 			KC_X, 			KC_C, 			KC_V, 		KC_B, 																								KC_N, 		KC_M, 			KC_COMM,	KC_DOT, 	KC_UP, 		RSFT_T(KC_NUHS), 
-				KC_LCTL, 			KC_LGUI, 		KC_LALT, 		KC_RALT, 									KC_BSPC, KC_SPC, LT(1,KC_ENT), 		LT(2,KC_ENT), KC_DEL, TD(TD_DOT_QMARK), 									KC_SLSH, 	KC_LEFT,	KC_DOWN, 	KC_RGHT),
+				KC_TAB, 			KC_Q, 			KC_W, 			KC_E, 			KC_R, 		KC_T, 		TD(TD_LBRC_LCBR), 														TD(TD_RBRC_RCBR), KC_Y, 	KC_U, 			KC_I, 		KC_O, 		KC_P, 		KC_LBRC, 
+				TD(TD_QUOTES), 		KC_A, 			KC_S, 			KC_D, 			KC_F, 		KC_G, 		TD(TD_LPRN_LT), 														TD(TD_RPRN_GT), KC_H, 		KC_J, 			KC_K, 		KC_L, 		KC_SCLN, 	KC_QUOT, 
+				KC_LSFT, 			KC_Z, 			KC_X, 			KC_C, 			KC_V, 		KC_B, 																								KC_N, 		KC_M, 			KC_COMM,	KC_DOT, 	KC_UP, 		KC_RSFT, 
+				KC_LCTL, 			KC_LGUI, 		KC_LALT, 		KC_RALT, 									KC_BSPC, TD(TD_SPACE_DOT), LT(1,KC_ENT), 		LT(2,KC_ENT), KC_DEL, KC_DOT, 									KC_SLSH, 	KC_LEFT,	KC_DOWN, 	KC_RGHT),
 
 	[1] = LAYOUT_3key_2us(
 				KC_NO, 				KC_F1, 			KC_F2, 			KC_F3, 			KC_F4, 		KC_F5, 		KC_NO, 																	RGB_TOG, 		KC_F6, 		KC_F7, 			KC_F8, 		KC_PSLS, 	KC_PAST, 	KC_PMNS, 
