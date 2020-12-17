@@ -206,7 +206,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 				KC_TRNS, 			KC_F1, 			KC_F2, 			KC_F3, 			KC_F4, 		KC_F5, 		KC_NO, 																	KC_TRNS, 		KC_F6, 		KC_F7, 			KC_F8, 		KC_F9, 	                KC_F10, 	KC_F11, 
 				KC_TRNS, 			KC_TRNS, 		KC_TRNS, 		KC_MS_BTN1, 	KC_MS_UP, 	KC_MS_BTN2, KC_PGUP, 																KC_TRNS, 		KC_TRNS, 	KC_TRNS, 		KC_TRNS, 	KC_TRNS, 	            KC_TRNS, 	KC_F12, 
 				KC_TRNS, 			KC_TRNS, 		LCTL(KC_S), 	KC_MS_LEFT,		KC_MS_DOWN, KC_MS_RIGHT,KC_PGDN, 																KC_TRNS, 		KC_HOME, 	KC_TRNS, 		KC_TRNS, 	KC_TRNS, 	            KC_TRNS,    KC_TRNS, 
-				KC_TRNS, 			LCTL(KC_Z), 	LCTL(KC_X), 	LCTL(KC_C), 	LCTL(KC_V), KC_TRNS, 																							KC_END, 	KC_TRNS, 		KC_TRNS, 	KC_TRNS, 	            KC_PGUP, 	KC_TRNS, 
+				KC_TRNS, 			LCTL(KC_Z), 	LCTL(KC_X), 	LCTL(KC_C), 	LCTL(KC_V), _SELECTWORD, 																							KC_END, 	KC_TRNS, 		KC_TRNS, 	KC_TRNS, 	            KC_PGUP, 	KC_TRNS, 
 				KC_TRNS, 			KC_TRNS, 		KC_TRNS, 		KC_TRNS, 										KC_TRNS, KC_TRNS, KC_TRNS, 				KC_TRNS, KC_TRNS, KC_TRNS, 								        	KC_TRNS, 	TD(TD_HOME_SHIFT_HOME), KC_PGDN, 	TD(TD_END_SHIFT_END)),
 	
 	[2] = LAYOUT_3key_2us(
@@ -216,3 +216,24 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 				KC_NO, 				KC_NO, 			KC_NO, 			KC_NO, 			KC_NO, 		KC_NO, 																								KC_NO, 		KC_SLSH, 		KC_NO, 		KC_NO, 		            KC_PGUP, 	KC_NO, 			
 				KC_NO, 				KC_NO, 			KC_NO, 			KC_NO, 										KC_NO, KC_SPC, KC_ENT, 				KC_ENT, KC_DEL, KC_TRNS, 													KC_NO, 		KC_LEFT, 	            KC_PGDN, 	KC_RGHT)
 };
+
+bool process_record_user(uint16_t keycode, keyrecord_t *record) {
+    switch (keycode) {
+        case _SELECTWORD:
+            if (record->event.pressed) {
+                register_code(KC_LCTL);
+                tap_code(KC_LEFT);
+                unregister_code(KC_LCTL); // ctrl + left
+                register_code(KC_LCTL);
+                register_code(KC_LSFT);
+                tap_code(KC_RIGHT);
+                unregister_code(KC_LCTL);
+                unregister_code(KC_LSFT); // ctrl + shift + right
+                register_code(KC_LSFT);
+                tap_code(KC_LEFT);
+                unregister_code(KC_LSFT); // shift left
+            }
+            return false;        
+    }
+    return true;
+}
