@@ -173,6 +173,10 @@ qk_tap_dance_action_t tap_dance_actions[] = {
     [TD_END_SHIFT_END] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, dance_end_shift_end_finished, dance_end_shift_end_reset),    
 };
 
+enum custom_keycodes {
+    _SELECTWORD = SAFE_RANGE
+};
+
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 	/* Keymap 0: Basic layer
  *
